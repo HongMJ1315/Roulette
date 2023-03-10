@@ -10,14 +10,18 @@ import SwiftUI
 struct coinInBlock : Hashable{
     var value: Int
     var total: Int
+    
 }
 
 struct chipState : Hashable{
     var isSelect : Bool
     var value : Int
     var label : String
+    var color: Color
 }
-struct Block : Hashable{
+
+struct Block : Hashable, Identifiable{
+    var id = UUID()
     var value: Int
     var color: Color
     var coins: [coinInBlock]
@@ -29,6 +33,7 @@ struct ContentView: View {
     @State var other : Int = 0;
     @State var money : Int = 30000;
     @State var selectCoin : Int = 0;
+    @State var isOtherSelect : Bool = false;
     @State var firstBlock = [
             [
                 Block(value: 1, color: .red, coins: []),
@@ -94,11 +99,11 @@ struct ContentView: View {
             ]
         ]
     @State var chips = [
-        chipState(isSelect: false, value: 10, label: "10"),
-        chipState(isSelect: false, value: 100, label: "100"),
-        chipState(isSelect: false, value: 1000, label: "1K"),
-        chipState(isSelect: false, value: 10000, label: "10K"),
-        chipState(isSelect: false, value: 100000, label: "100K")
+        chipState(isSelect: false, value: 10, label: "10", color : Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255)),
+        chipState(isSelect: false, value: 100, label: "100", color : Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255)),
+        chipState(isSelect: false, value: 1000, label: "1K", color : Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255)),
+        chipState(isSelect: false, value: 10000, label: "10K", color : Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255)),
+        chipState(isSelect: false, value: 100000, label: "100K", color : Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255))
     ]
 //    var chips = ["10", "100", "1K", "10K", "100K"]
     @State var randNumber : String = "0";
@@ -108,69 +113,132 @@ struct ContentView: View {
                 ForEach(0..<chips.count, id: \.self){ i in
                     Text(chips[i].label)
                         .foregroundColor(.white)
-                        .frame(width: 40.0, height: 40.0)
+                        .frame(width: 35.0, height: 25.0)
                         .padding()
-                        .background(Color(red: .random(in: 0...255)/255, green: .random(in: 0...255)/255, blue: .random(in: 0...255)/255))
+                        .font(.system(size: 15))
+                        .background(chips[i].color)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.red, lineWidth: chips[i].isSelect ? 3 : 0))
                         .onTapGesture {
-                            if(chips[i].isSelect == false){
-                                selectCoin = chips[i].value;
-                                chips[i].isSelect = true;
+                            isOtherSelect = false;
+                            for j in chips{
+                                if j.label == chips[i].label{
+                                    continue;
+                                }
+                                if(j.isSelect == true){
+                                    isOtherSelect = true;
+                                }
                             }
-                            else if(chips[i].isSelect == true){
-                                selectCoin = 0;
-                                chips[i].isSelect = false;
+                            if(isOtherSelect == false){
+                                if(chips[i].isSelect == false){
+                                    selectCoin = chips[i].value;
+                                    chips[i].isSelect = true;
+                                }
+                                else if(chips[i].isSelect == true){
+                                    selectCoin = 0;
+                                    chips[i].isSelect = false;
+                                }
                             }
                         }
                 }
                 .rotationEffect(Angle(degrees: 90))
-                
+                .offset(y : -150)
+                Button{
+                    
+                } label:{
+                    Text("Clear")
+                }
+                .offset(x:150)
+                .rotationEffect(Angle(degrees: 90))
             }
             VStack{
-                
-                ForEach(firstBlock, id: \.self){ col in
-                    HStack{
-                        ForEach(col, id: \.self){ row in
-                            let blockColor = row.color;
-                            let blockValue = row.value;
+                HStack{
+                    Text("00")
+                        .padding()
+                        .frame(width: 75)
+                        .border(Color.red, width: 2)
+                    Text("0")
+                        .padding()
+                        .frame(width: 75)
+                        .border(Color.red, width: 2)
+                }
+                ForEach(firstBlock.indices, id: \.self) { col in
+                    HStack {
+                        ForEach(firstBlock[col].indices, id: \.self) { row in
+                            var selectBlock = firstBlock[col][row]
+                            let blockColor = selectBlock.color
+                            let blockValue = selectBlock.value
                             Text(String(blockValue))
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(width: 60.0, height: 50.0)
-                            //                            .rotationEffect(Angle(degrees: 90))
                                 .background(blockColor)
-                            
+                                .onTapGesture {
+                                    if selectCoin == 0 {
+//                                        selectBlock.coins.removeAll()
+                                        return
+                                    }
+                                    if let index = selectBlock.coins.firstIndex(where: { $0.value == selectCoin }) {
+                                        selectBlock.coins[index].total += 1
+                                    } else {
+                                        selectBlock.coins.append(coinInBlock(value: selectCoin, total: 1))
+                                    }
+                                    
+                                    
+                                }
                         }
                     }
                 }
-                ForEach(secondBlock, id: \.self){ col in
+                ForEach(secondBlock.indices, id: \.self){ col in
                     HStack{
-                        ForEach(col, id: \.self){ row in
-                            let blockColor = row.color;
-                            let blockValue = row.value;
+                        ForEach(secondBlock[col].indices, id: \.self){ row in
+                            var selectBlock = secondBlock[col][row]
+                            let blockColor = selectBlock.color;
+                            let blockValue = selectBlock.value;
                             Text(String(blockValue))
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(width: 60.0, height: 50.0)
-                            //                            .rotationEffect(Angle(degrees: 90))
                                 .background(blockColor)
-                            
+                                .onTapGesture {
+                                    if selectCoin == 0 {
+//                                        selectBlock.coins.removeAll()
+                                        return
+                                    }
+                                    if let index = selectBlock.coins.firstIndex(where: { $0.value == selectCoin }) {
+                                        selectBlock.coins[index].total += 1
+                                    } else {
+                                        selectBlock.coins.append(coinInBlock(value: selectCoin, total: 1))
+                                    }
+                                    
+                                }
                         }
                     }
                 }
-                ForEach(thirdBlock, id: \.self){ col in
+                ForEach(thirdBlock.indices, id: \.self){ col in
                     HStack{
-                        ForEach(col, id: \.self){ row in
-                            let blockColor = row.color;
-                            let blockValue = row.value;
+                        ForEach(thirdBlock[col].indices, id: \.self){ row in
+                            var selectBlock = thirdBlock[col][row]
+                            let blockColor = selectBlock.color;
+                            let blockValue = selectBlock.value;
                             Text(String(blockValue))
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(width: 60.0, height: 50.0)
-                            //                            .rotationEffect(Angle(degrees: 90))
                                 .background(blockColor)
-                            
+                                .onTapGesture {
+                                    if selectCoin == 0 {
+//                                        selectBlock.coins.removeAll()
+                                        return
+                                    }
+                                    if let index = selectBlock.coins.firstIndex(where: { $0.value == selectCoin }) {
+                                        selectBlock.coins[index].total += 1
+                                    } else {
+                                        selectBlock.coins.append(coinInBlock(value: selectCoin, total: 1))
+                                    }
+                                    
+                                    
+                                }
                         }
                     }
                 }
