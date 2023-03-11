@@ -31,12 +31,35 @@ struct Block : Hashable, Identifiable{
                 print("\(value), \(i.value), \(i.total)")
             }
         }
-        
     }
+    var odds : Int
 }
 
+enum numberColor {
+    case red
+    case black
+    case green
+}
 
 struct ContentView: View {
+    var numberDict = [
+        "1" : numberColor.red,      "2" : numberColor.black,    "3" : numberColor.red,
+        "4" : numberColor.black,    "5" : numberColor.red,      "6" : numberColor.black,
+        "7" : numberColor.red,      "8" : numberColor.black,    "9" : numberColor.red,
+        "10" : numberColor.black,   "11" : numberColor.black,     "12" : numberColor.red,
+        
+        "13" : numberColor.red, "14" : numberColor.red, "15" : numberColor.red,
+        "16" : numberColor.red, "17" : numberColor.red, "18" : numberColor.red,
+        "19" : numberColor.red, "20" : numberColor.red, "21" : numberColor.red,
+        "22" : numberColor.red, "23" : numberColor.red, "24" : numberColor.red,
+        
+        "25" : numberColor.red,     "26" : numberColor.black, "27" : numberColor.red,
+        "28" : numberColor.black,   "29" : numberColor.black, "30" : numberColor.red,
+        "31" : numberColor.black,   "32" : numberColor.red,   "33" : numberColor.black,
+        "34" : numberColor.red,     "35" : numberColor.black, "36" : numberColor.red,
+        
+        "0" : numberColor.green, "00" : numberColor.green
+    ]
     @State private var isPresented = false
     @State var number : Int = 0;
     @State var other : Int = 0;
@@ -44,87 +67,89 @@ struct ContentView: View {
     @State var selectCoin : Int = 0;
     @State var isOtherSelect : Bool = false;
     @State var topBlock = [
-        Block(value: "0", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "00", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [])
+        Block(value: "0", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 35),
+        Block(value: "00", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 35)
     ]
     @State var sideBlock1 = [
-        Block(value: "1st", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "2nd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "3rd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [])
+        Block(value: "1st", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2),
+        Block(value: "2nd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2),
+        Block(value: "3rd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2)
     ]
     @State var sideBlock2 = [
-        Block(value: "1-18", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "Even", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "Black", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "Red", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "Odd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: []),
-        Block(value: "19-36", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [])
+        Block(value: "1-18", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
+        Block(value: "Even", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
+        Block(value: "Black", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
+        Block(value: "Red", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
+        Block(value: "Odd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
+        Block(value: "19-36", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1)
     ]
-    @State var firstBlock = [
+    @State var allBlock = [[
             [
-                Block(value: "1", color: .red, coins: []),
-                Block(value: "2", color: .black, coins: []),
-                Block(value: "3", color: .red, coins: [])
-            ],
-            [   Block(value: "4", color: .black, coins: []),
-                Block(value: "5", color: .red, coins: []),
-                Block(value: "6", color: .black, coins: [])],
-            [
-                Block(value: "7", color: .red, coins: []),
-                Block(value: "8", color: .black, coins: []),
-                Block(value: "9", color: .red, coins: [])
+                Block(value: "1", color: .red, coins: [], odds: 35),
+                Block(value: "2", color: .black, coins: [], odds: 35),
+                Block(value: "3", color: .red, coins: [], odds: 35)
             ],
             [
-                Block(value: "10", color: .black, coins: []),
-                Block(value: "11", color: .black, coins: []),
-                Block(value: "12", color: .red, coins: [])
+                Block(value: "4", color: .black, coins: [], odds: 35),
+                Block(value: "5", color: .red, coins: [], odds: 35),
+                Block(value: "6", color: .black, coins: [], odds: 35)
+            ],
+            [
+                Block(value: "7", color: .red, coins: [], odds: 35),
+                Block(value: "8", color: .black, coins: [], odds: 35),
+                Block(value: "9", color: .red, coins: [], odds: 35)
+            ],
+            [
+                Block(value: "10", color: .black, coins: [], odds: 35),
+                Block(value: "11", color: .black, coins: [], odds: 35),
+                Block(value: "12", color: .red, coins: [], odds: 35)
             ]
-        ]
-    @State var secondBlock = [
+        ],
+        [
             [
-                Block(value: "13", color: .black, coins: []),
-                Block(value: "14", color: .red, coins: []),
-                Block(value: "15", color: .black, coins: [])
+                Block(value: "13", color: .black, coins: [], odds: 35),
+                Block(value: "14", color: .red, coins: [], odds: 35),
+                Block(value: "15", color: .black, coins: [], odds: 35)
             ],
             [
-                Block(value: "16", color: .red, coins: []),
-                Block(value: "17", color: .black, coins: []),
-                Block(value: "18", color: .red, coins: [])
+                Block(value: "16", color: .red, coins: [], odds: 35),
+                Block(value: "17", color: .black, coins: [], odds: 35),
+                Block(value: "18", color: .red, coins: [], odds: 35)
             ],
             [
-                Block(value: "19", color: .red, coins: []),
-                Block(value: "20", color: .black, coins: []),
-                Block(value: "21", color: .red, coins: [])
+                Block(value: "19", color: .red, coins: [], odds: 35),
+                Block(value: "20", color: .black, coins: [], odds: 35),
+                Block(value: "21", color: .red, coins: [], odds: 35)
             ],
             [
-                Block(value: "22", color: .black, coins: []),
-                Block(value: "23", color: .red, coins: []),
-                Block(value: "24", color: .black, coins: [])
+                Block(value: "22", color: .black, coins: [], odds: 35),
+                Block(value: "23", color: .red, coins: [], odds: 35),
+                Block(value: "24", color: .black, coins: [], odds: 35)
             ]
-        ]
-    @State var thirdBlock = [
+        ],
+        [
             [
-                Block(value: "25", color: .red, coins: []),
-                Block(value: "26", color: .black, coins: []),
-                Block(value: "27", color: .red, coins: [])
+                Block(value: "25", color: .red, coins: [], odds: 35),
+                Block(value: "26", color: .black, coins: [], odds: 35),
+                Block(value: "27", color: .red, coins: [], odds: 35)
             ],
             [
-                Block(value: "28", color: .black, coins: []),
-                Block(value: "29", color: .black, coins: []),
-                Block(value: "30", color: .red, coins: [])
+                Block(value: "28", color: .black, coins: [], odds: 35),
+                Block(value: "29", color: .black, coins: [], odds: 35),
+                Block(value: "30", color: .red, coins: [], odds: 35)
             ],
             [
-                Block(value: "31", color: .black, coins: []),
-                Block(value: "32", color: .red, coins: []),
-                Block(value: "33", color: .black, coins: [])
+                Block(value: "31", color: .black, coins: [], odds: 35),
+                Block(value: "32", color: .red, coins: [], odds: 35),
+                Block(value: "33", color: .black, coins: [], odds: 35)
             ],
             [
-                Block(value: "34", color: .red, coins: []),
-                Block(value: "35", color: .black, coins: []),
-                Block(value: "36", color: .red, coins: [])
+                Block(value: "34", color: .red, coins: [], odds: 35),
+                Block(value: "35", color: .black, coins: [], odds: 35),
+                Block(value: "36", color: .red, coins: [], odds: 35)
             ]
-        ]
-    @State var selectedBlock: Block = Block(value: "0", color: .red, coins: []){
+        ]]
+    @State var selectedBlock: Block = Block(value: "0", color: .red, coins: [], odds: 0){
         willSet{
             print("\(selectedBlock.value)")
         }
@@ -175,23 +200,33 @@ struct ContentView: View {
                 .rotationEffect(Angle(degrees: 90))
                 .offset(y : -150)
                 Button{
-                    for col in 0..<firstBlock.count{
-                        for row in 0..<firstBlock[col].count{
-                            firstBlock[col][row].coins.removeAll()
-                        }
-                    }
-                    for col in 0..<secondBlock.count{
-                        for row in 0..<secondBlock[col].count{
-                            secondBlock[col][row].coins.removeAll()
-                        }
-                    }
-                    for col in 0..<thirdBlock.count{
-                        for row in 0..<thirdBlock[col].count{
-                            thirdBlock[col][row].coins.removeAll()
+                    for i in 0..<allBlock.count{
+                        for col in 0..<allBlock[i].count{
+                            for row in 0..<allBlock[i][col].count{
+                                for coin in allBlock[i][col][row].coins{
+                                    money += coin.value * coin.total
+                                }
+                                allBlock[i][col][row].coins.removeAll()
+                            }
                         }
                     }
                     for row in 0..<topBlock.count{
+                        for coin in topBlock[row].coins{
+                            money += coin.value * coin.total
+                        }
                         topBlock[row].coins.removeAll()
+                    }
+                    for row in 0..<sideBlock1.count{
+                        for coin in sideBlock1[row].coins{
+                            money += coin.value * coin.total
+                        }
+                        sideBlock1[row].coins.removeAll()
+                    }
+                    for row in 0..<sideBlock2.count{
+                        for coin in sideBlock2[row].coins{
+                            money += coin.value * coin.total
+                        }
+                        sideBlock2[row].coins.removeAll()
                     }
                 } label:{
                     Text("Clear")
@@ -217,11 +252,10 @@ struct ContentView: View {
                                 }
                                 if let index = sideBlock2[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                     sideBlock2[row].coins[index].total += 1
-                                    return
                                 } else {
                                     sideBlock2[row].coins.append(coinInBlock(value: selectCoin, total: 1))
                                 }
-                                
+                                money -= selectCoin
                                 
                             }
                             .onLongPressGesture {
@@ -256,11 +290,10 @@ struct ContentView: View {
                                 }
                                 if let index = sideBlock1[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                     sideBlock1[row].coins[index].total += 1
-                                    return
                                 } else {
                                     sideBlock1[row].coins.append(coinInBlock(value: selectCoin, total: 1))
                                 }
-                                
+                                money -= selectCoin
                                 
                             }
                             .onLongPressGesture {
@@ -296,11 +329,10 @@ struct ContentView: View {
                                     }
                                     if let index = topBlock[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                         topBlock[row].coins[index].total += 1
-                                        return
                                     } else {
                                         topBlock[row].coins.append(coinInBlock(value: selectCoin, total: 1))
                                     }
-                                    
+                                    money -= selectCoin
                                     
                                 }
                                 .onLongPressGesture {
@@ -316,117 +348,45 @@ struct ContentView: View {
                             
                         }
                     }
-                    ForEach(firstBlock.indices, id: \.self) { col in
-                        HStack (spacing:0){
-                            ForEach(firstBlock[col].indices, id: \.self) { row in
-                                let blockColor = firstBlock[col][row].color
-                                let blockValue = firstBlock[col][row].value
-                                Text(String(blockValue))
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(width: 55.0, height: 50.0)
-                                    .background(blockColor)
-                                    .border(Color.cyan, width: firstBlock[col][row].coins.count == 0 ? 0 : 3)
-                                    .onTapGesture {
-                                        
-                                        if selectCoin == 0 {
-                                            //                                        selectBlock.coins.removeAll()
-                                            return
-                                        }
-                                        if let index = firstBlock[col][row].coins.firstIndex(where: { $0.value == selectCoin }) {
-                                            firstBlock[col][row].coins[index].total += 1
-                                            return
-                                        } else {
-                                            firstBlock[col][row].coins.append(coinInBlock(value: selectCoin, total: 1))
-                                        }
-                                        
-                                        
-                                    }
-                                    .onLongPressGesture {
-                                        selectedBlock = firstBlock[col][row]
-                                        isPresented = true
-                                    }
-                                    .sheet(isPresented: $isPresented) {
-                                        ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
-                                            .onAppear {
-                                                selectedBlock = selectedBlock
+                    ForEach(allBlock.indices, id: \.self){ i in
+                        ForEach(allBlock[i].indices, id: \.self) { col in
+                            HStack (spacing:0){
+                                ForEach(allBlock[i][col].indices, id: \.self) { row in
+                                    let blockColor = allBlock[i][col][row].color
+                                    let blockValue = allBlock[i][col][row].value
+                                    Text(String(blockValue))
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .frame(width: 55.0, height: 50.0)
+                                        .background(blockColor)
+                                        .border(Color.cyan, width: allBlock[i][col][row].coins.count == 0 ? 0 : 3)
+                                        .onTapGesture {
+                                            
+                                            if selectCoin == 0 {
+                                                //                                        selectBlock.coins.removeAll()
+                                                return
                                             }
-                                    }
-                                
-                                
-                            }
-                        }
-                    }
-                    ForEach(secondBlock.indices, id: \.self){ col in
-                        HStack(spacing:0){
-                            ForEach(secondBlock[col].indices, id: \.self){ row in
-                                let selectBlock = secondBlock[col][row]
-                                let blockColor = selectBlock.color;
-                                let blockValue = selectBlock.value;
-                                Text(String(blockValue))
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(width: 55.0, height: 50.0)
-                                    .background(blockColor)
-                                    .border(Color.cyan, width: secondBlock[col][row].coins.count == 0 ? 0 : 3)
-                                    .onTapGesture {
-                                        if selectCoin == 0 {
-                                            //                                        selectBlock.coins.removeAll()
-                                            return
-                                        }
-                                        if let index = secondBlock[col][row].coins.firstIndex(where: { $0.value == selectCoin }) {
-                                            secondBlock[col][row].coins[index].total += 1
-                                        } else {
-                                            secondBlock[col][row].coins.append(coinInBlock(value: selectCoin, total: 1))
-                                        }
-                                        
-                                    }
-                                    .onLongPressGesture {
-                                        selectedBlock = secondBlock[col][row]
-                                        isPresented = true
-                                    }
-                                    .sheet(isPresented: $isPresented) {
-                                        ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
-                                            .onAppear {
-                                                selectedBlock = selectedBlock
+                                            if let index = allBlock[i][col][row].coins.firstIndex(where: { $0.value == selectCoin }) {
+                                                allBlock[i][col][row].coins[index].total += 1
+                                            } else {
+                                                allBlock[i] [col][row].coins.append(coinInBlock(value: selectCoin, total: 1))
                                             }
-                                    }
-                            }
-                        }
-                    }
-                    ForEach(thirdBlock.indices, id: \.self){ col in
-                        HStack(spacing:0){
-                            ForEach(thirdBlock[col].indices, id: \.self){ row in
-                                let selectBlock = thirdBlock[col][row]
-                                let blockColor = selectBlock.color;
-                                let blockValue = selectBlock.value;
-                                Text(String(blockValue))
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(width: 55.0, height: 50.0)
-                                    .background(blockColor)
-                                    .border(Color.cyan, width: thirdBlock[col][row].coins.count == 0 ? 0 : 3)
-                                    .onTapGesture {
-                                        if selectCoin == 0 {
-                                            //                                        selectBlock.coins.removeAll()
-                                            return
+                                            money -= selectCoin
+                                            
                                         }
-                                        if let index = thirdBlock[col][row].coins.firstIndex(where: { $0.value == selectCoin }) {
-                                            thirdBlock[col][row].coins[index].total += 1
-                                        } else {
-                                            thirdBlock[col][row].coins.append(coinInBlock(value: selectCoin, total: 1))
+                                        .onLongPressGesture {
+                                            selectedBlock = allBlock[i][col][row]
+                                            isPresented = true
                                         }
-                                    }
-                                    .onLongPressGesture {
-                                        selectedBlock = thirdBlock[col][row]
-                                        isPresented = true
-                                    }
-                                    .sheet(isPresented: $isPresented) {
-                                        ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
-                                            .onAppear {
-                                                selectedBlock = selectedBlock
-                                            }
-                                    }
+                                        .sheet(isPresented: $isPresented) {
+                                            ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
+                                                .onAppear {
+                                                    selectedBlock = selectedBlock
+                                                }
+                                        }
+                                    
+                                    
+                                }
                             }
                         }
                     }
@@ -454,6 +414,55 @@ struct ContentView: View {
                     else{
                         randNumber = String(number)
                     }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        for i in 0..<allBlock.count{
+                            for col in 0..<allBlock[i].count{
+                                for row in 0..<allBlock[i][col].count{
+                                    if(allBlock[i][col][row].value==randNumber){
+                                        for coin in allBlock[i][col][row].coins{
+                                            money += coin.value * coin.total * allBlock[i][col][row].odds;
+                                        }
+                                    }
+                                    allBlock[i][col][row].coins.removeAll()
+                                }
+                            }
+                        }
+
+                        for row in 0..<topBlock.count{
+                            if(topBlock[row].value==randNumber){
+                                for coin in topBlock[row].coins{
+                                    money += coin.value * topBlock[row].odds;
+                                }
+                            }
+                            topBlock[row].coins.removeAll()
+                        }
+                        
+                        if(randNumber != "0" && randNumber != "00"){
+                            for coin in sideBlock1[Int(number/12)].coins{
+                                money += coin.value * coin.total * sideBlock1[Int(number/12)].odds;
+                            }
+                            for coin in sideBlock2[((number%2==1) ? 4 : 1)].coins{
+                                money += coin.value * coin.total * sideBlock2[((number%2==1) ? 4 : 1)].odds;
+                            }
+                            for coin in sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].coins{
+                                money += coin.value * coin.total * sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].odds;
+                            }
+                            for coin in sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].coins{
+                                money += coin.value * coin.total * sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].odds;
+                            }
+                        }
+                        for row in 0..<sideBlock1.count{
+                            sideBlock1[row].coins.removeAll()
+                        }
+                        for row in 0..<sideBlock2.count{
+                            if(randNumber != "0" && randNumber != "00"){
+                                
+                            }
+                            sideBlock2[row].coins.removeAll()
+                        }
+                        
+                    }
+                    
                 } label:{
                     Text("Roll")
                 }
