@@ -60,6 +60,7 @@ struct ContentView: View {
         
         "0" : numberColor.green, "00" : numberColor.green
     ]
+//    @State var warntext : String = ""
     @State private var isPresented = false
     @State var number : Int = 0;
     @State var other : Int = 0;
@@ -186,13 +187,19 @@ struct ContentView: View {
                                 }
                             }
                             if(isOtherSelect == false){
+                                if(money < chips[i].value){
+//                                    warntext = "你沒有那麼多錢"
+                                    return
+                                }
                                 if(chips[i].isSelect == false){
                                     selectCoin = chips[i].value;
                                     chips[i].isSelect = true;
+//                                    warntext = ""
                                 }
                                 else if(chips[i].isSelect == true){
                                     selectCoin = 0;
                                     chips[i].isSelect = false;
+//                                    warntext = ""
                                 }
                             }
                         }
@@ -250,6 +257,7 @@ struct ContentView: View {
                                 if selectCoin == 0 {
                                     return
                                 }
+                                if(money - selectCoin < 0){ return }
                                 if let index = sideBlock2[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                     sideBlock2[row].coins[index].total += 1
                                 } else {
@@ -288,6 +296,7 @@ struct ContentView: View {
                                 if selectCoin == 0 {
                                     return
                                 }
+                                if(money - selectCoin < 0){ return }
                                 if let index = sideBlock1[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                     sideBlock1[row].coins[index].total += 1
                                 } else {
@@ -327,6 +336,7 @@ struct ContentView: View {
                                         //                                        selectBlock.coins.removeAll()
                                         return
                                     }
+                                    if(money - selectCoin < 0){ return }
                                     if let index = topBlock[row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                         topBlock[row].coins[index].total += 1
                                     } else {
@@ -366,6 +376,7 @@ struct ContentView: View {
                                                 //                                        selectBlock.coins.removeAll()
                                                 return
                                             }
+                                            if(money - selectCoin < 0){ return }
                                             if let index = allBlock[i][col][row].coins.firstIndex(where: { $0.value == selectCoin }) {
                                                 allBlock[i][col][row].coins[index].total += 1
                                             } else {
@@ -397,9 +408,12 @@ struct ContentView: View {
                     .offset(x:-250)
                     .frame(width: 50.0, height: 0.0)
                     .rotationEffect(Angle(degrees: 90))
-                Text(String(money))
-                    .rotationEffect(Angle(degrees: 90))
-                Button{
+                HStack(spacing:0){
+                    Text(String(money))
+                        .rotationEffect(Angle(degrees: 90))
+                    
+                }
+                    Button{
                     number = .random(in:0...36);
                     if(number==0){
                         
