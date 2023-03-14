@@ -76,6 +76,11 @@ struct ContentView: View {
         Block(value: "2nd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2),
         Block(value: "3rd", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2)
     ]
+    @State var buttonBlock = [
+        Block(value: "2To1", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2),
+        Block(value: "2To1", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2),
+        Block(value: "2To1", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 2)
+    ]
     @State var sideBlock2 = [
         Block(value: "1-18", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
         Block(value: "Even", color: Color(red: 44/255, green: 62/255, blue: 80/255), coins: [], odds: 1),
@@ -170,9 +175,9 @@ struct ContentView: View {
                 ForEach(0..<chips.count, id: \.self){ i in
                     Text(chips[i].label)
                         .foregroundColor(.white)
-                        .frame(width: 35.0, height: 25.0)
+                        .frame(width: 30.0, height: 40.0)
                         .padding()
-                        .font(.system(size: 15))
+                        .font(.system(size: 12))
                         .background(chips[i].color)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.red, lineWidth: chips[i].isSelect ? 3 : 0))
@@ -237,8 +242,9 @@ struct ContentView: View {
                     }
                 } label:{
                     Text("Clear")
+                        .foregroundColor(.black)
                 }
-                .offset(x:150)
+                .offset(x:125)
                 .rotationEffect(Angle(degrees: 90))
             }
             HStack(spacing:0){
@@ -271,7 +277,7 @@ struct ContentView: View {
                                 isPresented = true
                             }
                             .sheet(isPresented: $isPresented) {
-                                ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
+                                ChildView(selectBlock: selectedBlock, chips: chips, isPresented: $isPresented)
                                     .onAppear {
                                         selectedBlock = selectedBlock
                                     }
@@ -280,7 +286,7 @@ struct ContentView: View {
 //                    .rotationEffect(Angle(degrees: 90))
             
                 }
-                .offset(y : 25)
+                .offset(y : 0)
                 VStack(spacing: 0){
                     ForEach(sideBlock1.indices, id: \.self) { row in
                         let blockColor = sideBlock1[row].color
@@ -288,8 +294,8 @@ struct ContentView: View {
                         Text(String(blockValue))
                             .rotationEffect(Angle(degrees: 90))
                             .foregroundColor(.white)
-                            .padding(0.0)
-                            .frame(width: 50.0, height: 200.0)
+                            .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .frame(width: 48.5, height: 200.0)
                             .background(blockColor)
                             .border(Color.cyan, width: sideBlock1[row].coins.count == 0 ? 0 : 3)
                             .onTapGesture {
@@ -310,7 +316,7 @@ struct ContentView: View {
                                 isPresented = true
                             }
                             .sheet(isPresented: $isPresented) {
-                                ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
+                                ChildView(selectBlock: selectedBlock, chips: chips, isPresented: $isPresented)
                                     .onAppear {
                                         selectedBlock = selectedBlock
                                     }
@@ -318,7 +324,7 @@ struct ContentView: View {
                     }
                     
                 }
-                .offset(y : 25)
+                .offset(y : 0)
                 VStack(spacing:0){
                     HStack(spacing:0){
                         ForEach(topBlock.indices, id: \.self) { row in
@@ -327,7 +333,7 @@ struct ContentView: View {
                             Text(String(blockValue))
                                 .foregroundColor(.white)
                                 .padding()
-                                .frame(width: 82.5, height: 50.0)
+                                .frame(width: 90, height: 50.0)
                                 .background(blockColor)
                                 .border(Color.cyan, width: topBlock[row].coins.count == 0 ? 0 : 3)
                                 .onTapGesture {
@@ -350,7 +356,7 @@ struct ContentView: View {
                                     isPresented = true
                                 }
                                 .sheet(isPresented: $isPresented) {
-                                    ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
+                                    ChildView(selectBlock: selectedBlock, chips: chips, isPresented: $isPresented)
                                         .onAppear {
                                             selectedBlock = selectedBlock
                                         }
@@ -367,7 +373,7 @@ struct ContentView: View {
                                     Text(String(blockValue))
                                         .foregroundColor(.white)
                                         .padding()
-                                        .frame(width: 55.0, height: 50.0)
+                                        .frame(width: 60, height: 50.0)
                                         .background(blockColor)
                                         .border(Color.cyan, width: allBlock[i][col][row].coins.count == 0 ? 0 : 3)
                                         .onTapGesture {
@@ -390,7 +396,7 @@ struct ContentView: View {
                                             isPresented = true
                                         }
                                         .sheet(isPresented: $isPresented) {
-                                            ChildView(selectBlock: selectedBlock, isPresented: $isPresented)
+                                            ChildView(selectBlock: selectedBlock, chips: chips, isPresented: $isPresented)
                                                 .onAppear {
                                                     selectedBlock = selectedBlock
                                                 }
@@ -401,7 +407,49 @@ struct ContentView: View {
                             }
                         }
                     }
+                    HStack(spacing:0){
+                        ForEach(buttonBlock.indices, id: \.self) { row in
+                            let blockColor = buttonBlock[row].color
+                            let blockValue = buttonBlock[row].value
+                            Text(String(blockValue))
+//                                .rotationEffect(Angle(degrees: 90))
+                                .font(.system(size: 12))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.leading)
+                                .padding()
+                                .frame(width: 60, height: 50.0)
+                                .background(blockColor)
+                                .border(Color.cyan, width: buttonBlock[row].coins.count == 0 ? 0 : 3)
+                                .onTapGesture {
+                                    
+                                    if selectCoin == 0 {
+                                        //                                        selectBlock.coins.removeAll()
+                                        return
+                                    }
+                                    if(money - selectCoin < 0){ return }
+                                    if let index = buttonBlock[row].coins.firstIndex(where: { $0.value == selectCoin }) {
+                                        buttonBlock[row].coins[index].total += 1
+                                    } else {
+                                        buttonBlock[row].coins.append(coinInBlock(value: selectCoin, total: 1))
+                                    }
+                                    money -= selectCoin
+                                    
+                                }
+                                .onLongPressGesture {
+                                    selectedBlock = buttonBlock[row]
+                                    isPresented = true
+                                }
+                                .sheet(isPresented: $isPresented) {
+                                    ChildView(selectBlock: selectedBlock, chips: chips, isPresented: $isPresented)
+                                        .onAppear {
+                                            selectedBlock = selectedBlock
+                                        }
+                                }
+                            
+                        }
+                    }
                 }
+                
             }
             VStack{
                 Text(String(randNumber))
@@ -478,32 +526,47 @@ struct ContentView: View {
                     }
                     
                 } label:{
-                    Text("Roll")
+                    Text("spin")
+                        .foregroundColor(.black)
                 }
                 .offset(x:250)
                 .rotationEffect(Angle(degrees: 90))
             }
         }
+        
+
+        .background(Color(red: 20/255, green: 90/255, blue: 50/255))
         .rotationEffect(Angle(degrees: 270))
-            
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+
+        
     }
 }
 
 struct ChildView: View {
     var selectBlock : Block
+    var chips : [chipState]
 //    var row : Int
 //    var col : Int
     @Binding var isPresented : Bool
     var body: some View {
-        HStack(){
-            Text("\(selectBlock.value)")
-                .font(.system(size: 15))
+        VStack(){
+            Text("Block : \(selectBlock.value)")
+                .font(.system(size: 20))
             ForEach(selectBlock.coins, id:\.self){ coin in
-                Text("\(coin.value), \(coin.total)")
-                    .font(.largeTitle)
-                    .padding()
-                    .border(Color.red, width: 2)
-                    
+                HStack{
+                    if let matchingChip = chips.filter({ $0.value == coin.value }).first {
+                        Text("\(matchingChip.label)")
+                            .foregroundColor(.white)
+                            .frame(width: 35.0, height: 25.0)
+                            .padding()
+                            .font(.system(size: 15))
+                            .background(matchingChip.color)
+                            .clipShape(Circle())
+                        Text(" x \(coin.total)")
+                    }
+                }
+
             }
             Text("Back")
                 .font(.largeTitle)
