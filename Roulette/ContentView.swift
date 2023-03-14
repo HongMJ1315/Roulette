@@ -26,10 +26,10 @@ struct Block : Hashable, Identifiable{
     var color: Color
     var coins: [coinInBlock]{
         willSet{
-            print("\(coins.count)")
-            for i in coins{
-                print("\(value), \(i.value), \(i.total)")
-            }
+//            print("\(coins.count)")
+//            for i in coins{
+//                print("\(value), \(i.value), \(i.total)")
+//            }
         }
     }
     var odds : Int
@@ -62,7 +62,11 @@ struct ContentView: View {
     ]
 //    @State var warntext : String = ""
     @State private var isPresented = false
-    @State var number : Int = 0;
+    @State var number : Int = 0{
+        willSet{
+            print((number-1)/12, (number-1)%3)
+        }
+    };
     @State var other : Int = 0;
     @State var money : Int = 30000;
     @State var selectCoin : Int = 0;
@@ -157,7 +161,7 @@ struct ContentView: View {
         ]]
     @State var selectedBlock: Block = Block(value: "0", color: .red, coins: [], odds: 0){
         willSet{
-            print("\(selectedBlock.value)")
+//            print("\(selectedBlock.value)")
         }
     }
     @State var chips = [
@@ -193,7 +197,7 @@ struct ContentView: View {
                             }
                             if(isOtherSelect == false){
                                 if(money < chips[i].value){
-//                                    warntext = "你沒有那麼多錢"
+                                    chips[i].isSelect = false;
                                     return
                                 }
                                 if(chips[i].isSelect == false){
@@ -210,7 +214,7 @@ struct ContentView: View {
                         }
                 }
                 .rotationEffect(Angle(degrees: 90))
-                .offset(y : -150)
+                .offset(y : -100)
                 Button{
                     for i in 0..<allBlock.count{
                         for col in 0..<allBlock[i].count{
@@ -228,6 +232,12 @@ struct ContentView: View {
                         }
                         topBlock[row].coins.removeAll()
                     }
+                    for row in 0..<buttonBlock.count{
+                        for coin in buttonBlock[row].coins{
+                            money += coin.value * coin.total
+                        }
+                        buttonBlock[row].coins.removeAll()
+                    }
                     for row in 0..<sideBlock1.count{
                         for coin in sideBlock1[row].coins{
                             money += coin.value * coin.total
@@ -244,7 +254,7 @@ struct ContentView: View {
                     Text("Clear")
                         .foregroundColor(.black)
                 }
-                .offset(x:125)
+                .offset(x:100)
                 .rotationEffect(Angle(degrees: 90))
             }
             HStack(spacing:0){
@@ -477,6 +487,24 @@ struct ContentView: View {
                         randNumber = String(number)
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        
+                        if(randNumber != "0" && randNumber != "00"){
+                            for coin in sideBlock1[Int((number-1)/12)].coins{
+                                money += coin.value * coin.total * sideBlock1[Int((number-1)/12)].odds;
+                            }
+                            for coin in sideBlock2[((number%2==1) ? 4 : 1)].coins{
+                                money += coin.value * coin.total * sideBlock2[((number%2==1) ? 4 : 1)].odds;
+                            }
+                            for coin in sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].coins{
+                                money += coin.value * coin.total * sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].odds;
+                            }
+                            for coin in sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].coins{
+                                money += coin.value * coin.total * sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].odds;
+                            }
+                            for coin in buttonBlock[(number-1)%3].coins{
+                                money += coin.value * coin.total * buttonBlock[(number-1)%3].odds;
+                            }
+                        }
                         for i in 0..<allBlock.count{
                             for col in 0..<allBlock[i].count{
                                 for row in 0..<allBlock[i][col].count{
@@ -498,20 +526,13 @@ struct ContentView: View {
                             }
                             topBlock[row].coins.removeAll()
                         }
-                        
-                        if(randNumber != "0" && randNumber != "00"){
-                            for coin in sideBlock1[Int(number/12)].coins{
-                                money += coin.value * coin.total * sideBlock1[Int(number/12)].odds;
+                        for row in 0..<buttonBlock.count{
+                            if(buttonBlock[row].value==randNumber){
+                                for coin in buttonBlock[row].coins{
+                                    money += coin.value * buttonBlock[row].odds;
+                                }
                             }
-                            for coin in sideBlock2[((number%2==1) ? 4 : 1)].coins{
-                                money += coin.value * coin.total * sideBlock2[((number%2==1) ? 4 : 1)].odds;
-                            }
-                            for coin in sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].coins{
-                                money += coin.value * coin.total * sideBlock2[((numberDict[randNumber]==numberColor.red) ? 3 : 2)].odds;
-                            }
-                            for coin in sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].coins{
-                                money += coin.value * coin.total * sideBlock2[((1 <= number && number <= 12) ? 0 : 5)].odds;
-                            }
+                            buttonBlock[row].coins.removeAll()
                         }
                         for row in 0..<sideBlock1.count{
                             sideBlock1[row].coins.removeAll()
